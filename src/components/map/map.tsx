@@ -37,9 +37,10 @@ const stylePopup = {
 
 interface IMap {
   onClick: (coordinate: string) => void;
+  onMarkerClick: (coordinate: string) => void;
 }
 
-export const MapComponent: React.FC<IMap> = ({ onClick }) => {
+export const MapComponent: React.FC<IMap> = ({ onClick, onMarkerClick }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
   const finds = useSelector((store: RootState) => store.findReducer.finds);
@@ -87,7 +88,11 @@ export const MapComponent: React.FC<IMap> = ({ onClick }) => {
       // map.addOverlay(popup);
       console.log(formatCoord(pos));
       map.forEachFeatureAtPixel(event.pixel, (feature) => {
-        console.log(feature.getGeometry()?.getExtent());
+        const geometry = feature.getGeometry();
+        if (geometry instanceof Point) {
+          console.log(geometry.getCoordinates());
+          onMarkerClick(formatCoord(geometry.getCoordinates()));
+        }
       });
       onClick(formatCoord(pos));
     });

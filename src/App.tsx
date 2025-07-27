@@ -1,39 +1,41 @@
-import { useState } from 'react';
+import { use, useState } from 'react';
 import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
 import { MapComponent } from './components/map/map';
 import { Modal } from './components/Modal/Modal';
+import { useSelector } from 'react-redux';
+import type { RootState } from './store/store';
+import { FindCard } from './components/FindCard/FindCard';
 
 function App() {
   const [openModal, setOpenModal] = useState(false);
   const [currantCoordinate, setCurrantCoordinate] = useState('');
+  const [currentFindID, setCurrentFindID] = useState<string>('');
   const [currentFind, setCurrentFind] = useState({});
+
+  const find = useSelector(
+    (store: RootState) => store.findReducer.finds[currentFindID]
+  );
+
+  const handleMarkerClick = (coordinate: string) => {
+    setCurrentFindID(coordinate);
+  };
 
   const handleMapClick = (coordinate: string) => {
     setCurrantCoordinate(coordinate);
     setOpenModal(true);
   };
+  console.log(find);
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <MapComponent onClick={handleMapClick} />
-      <div className="card">
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more Hello world!;)
-      </p>
+      <h1>Карта находок</h1>
+      <MapComponent
+        onMarkerClick={handleMarkerClick}
+        onClick={handleMapClick}
+      />
+      {find && <FindCard {...find} />}
+      <div className="card"></div>
       {openModal && (
         <Modal
           coordinate={currantCoordinate}

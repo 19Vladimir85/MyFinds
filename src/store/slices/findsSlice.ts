@@ -3,11 +3,11 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { IFind } from '../../types';
 
 interface IFindSlice {
-  finds: FindSlice;
+  finds: Finds;
 }
 
 // type FindSlice = Map<string, IFind>;
-type FindSlice = Record<string, IFind>;
+type Finds = Record<string, IFind>;
 
 const initialState: IFindSlice = { finds: {} };
 
