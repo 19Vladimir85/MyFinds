@@ -1,14 +1,11 @@
 import { useEffect, useRef } from 'react';
 import 'ol/ol.css';
-import Map from 'ol/Map.js';
+import MapOl from 'ol/Map.js';
 import OSM from 'ol/source/OSM.js';
 import TileLayer from 'ol/layer/Tile.js';
 import View from 'ol/View.js';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import Overlay from 'ol/Overlay.js';
-import { toLonLat } from 'ol/proj';
-import { toStringHDMS } from 'ol/coordinate';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
 import Point from 'ol/geom/Point.js';
@@ -23,26 +20,14 @@ const parseCoord = (coord: string): number[] => {
   return coord.split(',').map(parseFloat);
 };
 
-const stylePopup = {
-  position: 'absolute',
-  backgroundColor: 'white',
-  padding: '5px',
-  borderRadius: '5px',
-  border: '1px solid black',
-  transform: 'translate(-50%, -100%)',
-  pointerEvents: 'none',
-  width: '220px',
-  color: 'black',
-};
-
 interface IMap {
   onClick: (coordinate: string) => void;
   onMarkerClick: (coordinate: string) => void;
+  onReset: () => void;
 }
 
-export const MapComponent: React.FC<IMap> = ({ onClick, onMarkerClick }) => {
+export const Map: React.FC<IMap> = ({ onClick, onMarkerClick, onReset }) => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const popupRef = useRef<HTMLDivElement>(null);
   const finds = useSelector((store: RootState) => store.findReducer.finds);
 
   const features = Object.entries(finds).map(([coord, find]) => {
@@ -62,7 +47,7 @@ export const MapComponent: React.FC<IMap> = ({ onClick, onMarkerClick }) => {
 
   useEffect(() => {
     if (!mapRef.current) return;
-    const map = new Map({
+    const map = new MapOl({
       target: mapRef.current,
       layers: [
         new TileLayer({
@@ -77,34 +62,23 @@ export const MapComponent: React.FC<IMap> = ({ onClick, onMarkerClick }) => {
         zoom: 2,
       }),
     });
-    const popup = new Overlay({
-      element: popupRef.current!,
-    });
     map.on('click', (event) => {
+      onReset();
       const pos = event.coordinate;
-      // const hdms = toStringHDMS(toLonLat(pos));
-      // popup.setPosition(pos);
-      // if (popupRef.current) popupRef.current.innerHTML = `<p>${hdms}</p>`;
-      // map.addOverlay(popup);
-      console.log(formatCoord(pos));
+      let flag = true;
       map.forEachFeatureAtPixel(event.pixel, (feature) => {
         const geometry = feature.getGeometry();
         if (geometry instanceof Point) {
-          console.log(geometry.getCoordinates());
           onMarkerClick(formatCoord(geometry.getCoordinates()));
+          flag = false;
         }
       });
-      onClick(formatCoord(pos));
+      if (flag) onClick(formatCoord(pos));
     });
     return () => {
       map.setTarget(undefined);
     };
   }, [finds]);
 
-  return (
-    <>
-      <div ref={mapRef} style={{ height: 550, width: 550 }}></div>
-      <div ref={popupRef} style={stylePopup} className="ol-popup"></div>
-    </>
-  );
+  return <div ref={mapRef} style={{ height: 550, width: 550 }}></div>;
 };

@@ -1,12 +1,11 @@
-import { use, useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import { useState } from 'react';
 import './App.css';
-import { MapComponent } from './components/map/map';
+import { Map } from './components/Map/Map';
 import { Modal } from './components/Modal/Modal';
 import { useSelector } from 'react-redux';
 import type { RootState } from './store/store';
-import { FindCard } from './components/FindCard/FindCard';
+import { FindPreview } from './components/FindPreview/FindPreview';
+import { FindList } from './components/FindList/FindList';
 
 function App() {
   const [openModal, setOpenModal] = useState(false);
@@ -26,23 +25,31 @@ function App() {
     setCurrantCoordinate(coordinate);
     setOpenModal(true);
   };
-  console.log(find);
+
+  const handleResetState = () => {
+    setCurrentFindID('');
+    setOpenModal(false);
+  };
   return (
     <>
       <h1>Карта находок</h1>
-      <MapComponent
-        onMarkerClick={handleMarkerClick}
-        onClick={handleMapClick}
-      />
-      {find && <FindCard {...find} />}
-      <div className="card"></div>
-      {openModal && (
-        <Modal
-          coordinate={currantCoordinate}
-          onSave={setCurrentFind}
-          onClose={() => setOpenModal(false)}
+      <div className="wrapper">
+        <Map
+          onMarkerClick={handleMarkerClick}
+          onClick={handleMapClick}
+          onReset={handleResetState}
         />
-      )}
+        {find && <FindPreview {...find} />}
+        <div className="card"></div>
+        {openModal && (
+          <Modal
+            coordinate={currantCoordinate}
+            onSave={setCurrentFind}
+            onClose={() => setOpenModal(false)}
+          />
+        )}
+        <FindList />
+      </div>
     </>
   );
 }

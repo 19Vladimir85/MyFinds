@@ -3,14 +3,20 @@ import type { IFind } from '../../types';
 import styles from './Modal.module.css';
 import { useDispatch } from 'react-redux';
 import { addFind } from '../../store/slices/findsSlice';
-
+import cn from 'clsx';
 interface IModal {
   coordinate: string;
   onSave: (data: IFind) => void;
   onClose: () => void;
+  className: string;
 }
 
-export const Modal: React.FC<IModal> = ({ coordinate, onSave, onClose }) => {
+export const Modal: React.FC<IModal> = ({
+  coordinate,
+  onSave,
+  onClose,
+  className,
+}) => {
   const initionalState: IFind = {
     coordinate,
     img: '',
@@ -28,8 +34,8 @@ export const Modal: React.FC<IModal> = ({ coordinate, onSave, onClose }) => {
   };
 
   return (
-    <div className={styles.Modal}>
-      <form onSubmit={handleSubmit}>
+    <div className={cn(className, styles.modal)}>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <img src={find.img} alt="моя находка" />
         <input
           type="text"
