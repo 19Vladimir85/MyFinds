@@ -9,7 +9,7 @@ export const FindList: React.FC = () => {
   return (
     <div className={styles.list}>
       {Object.values(findlist).map((el) => (
-        <FindPreview {...el} />
+        <FindPreview {...el} key={el.coordinate} />
       ))}
     </div>
   );

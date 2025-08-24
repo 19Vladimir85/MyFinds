@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import type { IFind } from '../../types';
 import styles from './Modal.module.css';
-import { useDispatch } from 'react-redux';
-import { addFind } from '../../store/slices/findsSlice';
 import cn from 'clsx';
 interface IModal {
   coordinate: string;
-  onSave: (data: IFind) => void;
   onClose: () => void;
-  className: string;
+  className?: string;
+  onSubmit: (find: IFind) => void;
+  editFind?: IFind;
 }
 
 export const Modal: React.FC<IModal> = ({
   coordinate,
-  onSave,
   onClose,
   className,
+  onSubmit,
+  editFind,
 }) => {
   const initionalState: IFind = {
     coordinate,
@@ -23,13 +23,12 @@ export const Modal: React.FC<IModal> = ({
     title: '',
     description: '',
   };
-  const dispatch = useDispatch();
 
-  const [find, setFind] = useState<IFind>(initionalState);
+  const [find, setFind] = useState<IFind>(editFind || initionalState);
 
   const handleSubmit = () => {
-    onSave(find);
-    dispatch(addFind(find));
+    console.log(onSubmit, find);
+    onSubmit(find);
     onClose();
   };
 

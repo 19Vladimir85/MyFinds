@@ -16,11 +16,13 @@ const findSlice = createSlice({
   initialState,
   reducers: {
     addFind: (state, action: PayloadAction<IFind>) => {
-      console.log(action);
       state.finds[action.payload.coordinate] = action.payload;
+    },
+    deleteFind: (state, action: PayloadAction<string>) => {
+      delete state.finds[action.payload];
     },
   },
 });
 
-export const { addFind } = findSlice.actions;
+export const { addFind, deleteFind } = findSlice.actions;
 export const findReducer = findSlice.reducer;

@@ -11,7 +11,6 @@ import type { RootState } from '../../store/store';
 import Point from 'ol/geom/Point.js';
 import Feature from 'ol/Feature.js';
 import { Icon, Style } from 'ol/style.js';
-
 const formatCoord = (coord: number[]): string => {
   return coord.join(',');
 };
@@ -29,7 +28,6 @@ interface IMap {
 export const Map: React.FC<IMap> = ({ onClick, onMarkerClick, onReset }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const finds = useSelector((store: RootState) => store.findReducer.finds);
-
   const features = Object.entries(finds).map(([coord, find]) => {
     const iconStyle = new Style({
       image: new Icon({
