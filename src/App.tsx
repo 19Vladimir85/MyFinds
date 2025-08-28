@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Map } from './components/Map/Map';
 import { Modal } from './components/Modal/Modal';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,10 +9,23 @@ import styles from './App.module.css';
 import { setRightColumnType } from './store/slices/appSlice';
 import { addFind } from './store/slices/findsSlice';
 
+export interface IUserPosition {
+  lat: number;
+  long: number;
+}
+
 function App() {
   const [currantCoordinate, setCurrantCoordinate] = useState('');
   const [currentFindID, setCurrentFindID] = useState<string>('');
+  const [userPosition, setUserPosition] = useState<IUserPosition>();
 
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      console.log(position);
+      const { latitude, longitude } = position.coords;
+      setUserPosition({ lat: latitude, long: longitude });
+    });
+  }, []);
   const find = useSelector(
     (store: RootState) => store.findReducer.finds[currentFindID]
   );
@@ -40,7 +53,7 @@ function App() {
     dispatch(setRightColumnType('list'));
   };
   return (
-    <>
+    <div className={styles.body}>
       <h1>Карта находок</h1>
       <div className={styles.wrapper}>
         <div className={styles.leftColumn}>
@@ -48,6 +61,7 @@ function App() {
             onMarkerClick={handleMarkerClick}
             onClick={handleMapClick}
             onReset={handleResetState}
+            userPosition={userPosition}
           />
         </div>
         <div className={styles.rightColumn}>
@@ -64,7 +78,7 @@ function App() {
           {rightColumnType === 'list' && <FindList />}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

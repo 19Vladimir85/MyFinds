@@ -8,9 +8,13 @@ export const FindList: React.FC = () => {
 
   return (
     <div className={styles.list}>
-      {Object.values(findlist).map((el) => (
-        <FindPreview {...el} key={el.coordinate} />
-      ))}
+      {Object.keys(findlist).length !== 0 ? (
+        Object.values(findlist).map((el) => (
+          <FindPreview {...el} key={el.coordinate} />
+        ))
+      ) : (
+        <div>Добавьте находку кликнув на карту</div>
+      )}
     </div>
   );
 };

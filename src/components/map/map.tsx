@@ -11,6 +11,9 @@ import type { RootState } from '../../store/store';
 import Point from 'ol/geom/Point.js';
 import Feature from 'ol/Feature.js';
 import { Icon, Style } from 'ol/style.js';
+import { type IUserPosition } from '../../App';
+import { fromLonLat } from 'ol/proj';
+
 const formatCoord = (coord: number[]): string => {
   return coord.join(',');
 };
@@ -23,9 +26,15 @@ interface IMap {
   onClick: (coordinate: string) => void;
   onMarkerClick: (coordinate: string) => void;
   onReset: () => void;
+  userPosition?: IUserPosition;
 }
 
-export const Map: React.FC<IMap> = ({ onClick, onMarkerClick, onReset }) => {
+export const Map: React.FC<IMap> = ({
+  onClick,
+  onMarkerClick,
+  onReset,
+  userPosition,
+}) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const finds = useSelector((store: RootState) => store.findReducer.finds);
   const features = Object.entries(finds).map(([coord, find]) => {
@@ -45,6 +54,9 @@ export const Map: React.FC<IMap> = ({ onClick, onMarkerClick, onReset }) => {
 
   useEffect(() => {
     if (!mapRef.current) return;
+    const center = userPosition
+      ? fromLonLat([userPosition.long, userPosition.lat])
+      : [0, 0];
     const map = new MapOl({
       target: mapRef.current,
       layers: [
@@ -56,10 +68,11 @@ export const Map: React.FC<IMap> = ({ onClick, onMarkerClick, onReset }) => {
         }),
       ],
       view: new View({
-        center: [0, 0],
-        zoom: 2,
+        center: center,
+        zoom: 7,
       }),
     });
+    console.log(userPosition);
     map.on('click', (event) => {
       onReset();
       const pos = event.coordinate;
@@ -76,7 +89,7 @@ export const Map: React.FC<IMap> = ({ onClick, onMarkerClick, onReset }) => {
     return () => {
       map.setTarget(undefined);
     };
-  }, [finds]);
+  }, [finds, userPosition]);
 
-  return <div ref={mapRef} style={{ height: 550, width: 550 }}></div>;
+  return <div ref={mapRef} style={{ height: 650, width: 750 }}></div>;
 };
