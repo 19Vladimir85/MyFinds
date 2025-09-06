@@ -14,7 +14,7 @@ import { Icon, Style } from 'ol/style.js';
 import { type IUserPosition } from '../../App';
 import { fromLonLat } from 'ol/proj';
 
-const formatCoord = (coord: number[]): string => {
+export const formatCoord = (coord: number[]): string => {
   return coord.join(',');
 };
 
@@ -23,7 +23,7 @@ const parseCoord = (coord: string): number[] => {
 };
 
 interface IMap {
-  onClick: (coordinate: string) => void;
+  onClick: (coordinate: number[]) => void;
   onMarkerClick: (coordinate: string) => void;
   onReset: () => void;
   userPosition?: IUserPosition;
@@ -47,7 +47,9 @@ export const Map: React.FC<IMap> = ({
           find.img || 'https://openlayers.org/en/latest/examples/data/icon.png',
       }),
     });
-    const dot = new Feature({ geometry: new Point(parseCoord(coord)) });
+    const dot = new Feature({
+      geometry: new Point(parseCoord(coord)),
+    });
     dot.setStyle(iconStyle);
     return dot;
   });
@@ -72,7 +74,6 @@ export const Map: React.FC<IMap> = ({
         zoom: 7,
       }),
     });
-    console.log(userPosition);
     map.on('click', (event) => {
       onReset();
       const pos = event.coordinate;
@@ -84,7 +85,7 @@ export const Map: React.FC<IMap> = ({
           flag = false;
         }
       });
-      if (flag) onClick(formatCoord(pos));
+      if (flag) onClick(pos);
     });
     return () => {
       map.setTarget(undefined);

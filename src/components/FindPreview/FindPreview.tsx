@@ -2,7 +2,7 @@ import type { IFind } from '../../types';
 import styles from './FindPreview.module.css';
 
 export const FindPreview: React.FC<IFind> = ({
-  coordinate,
+  location,
   img,
   title,
   description,
@@ -11,7 +11,7 @@ export const FindPreview: React.FC<IFind> = ({
     <div className={styles.findPreview}>
       <img src={img} alt={title} />
       <div>{title}</div>
-      <div>{coordinate}</div>
+      <div>{location}</div>
       <div>{description}</div>
     </div>
   );

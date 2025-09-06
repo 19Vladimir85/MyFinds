@@ -8,6 +8,8 @@ import { FindList } from './components/FindList/FindList';
 import styles from './App.module.css';
 import { setRightColumnType } from './store/slices/appSlice';
 import { addFind } from './store/slices/findsSlice';
+import { formatCoord } from './components/Map/Map';
+import { toLonLat } from 'ol/proj';
 
 export interface IUserPosition {
   lat: number;
@@ -18,10 +20,10 @@ function App() {
   const [currantCoordinate, setCurrantCoordinate] = useState('');
   const [currentFindID, setCurrentFindID] = useState<string>('');
   const [userPosition, setUserPosition] = useState<IUserPosition>();
+  const [currantLocation, setCurrantLocation] = useState<string>('');
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
-      console.log(position);
       const { latitude, longitude } = position.coords;
       setUserPosition({ lat: latitude, long: longitude });
     });
@@ -41,15 +43,19 @@ function App() {
     dispatch(setRightColumnType('card'));
   };
 
-  const handleMapClick = (coordinate: string) => {
-    setCurrantCoordinate(coordinate);
+  const handleMapClick = (coordinate: number[]) => {
+    setCurrantCoordinate(formatCoord(coordinate));
+    const correctCoord = toLonLat(coordinate);
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${correctCoord[1]}&lon=${correctCoord[0]}`;
+    fetch(url)
+      .then((res) => res.json())
+      .then((value) => setCurrantLocation(value.display_name));
 
     dispatch(setRightColumnType('modal'));
   };
 
   const handleResetState = () => {
     setCurrentFindID('');
-    console.log('+++');
     dispatch(setRightColumnType('list'));
   };
   return (
@@ -71,6 +77,7 @@ function App() {
           {rightColumnType === 'modal' && (
             <Modal
               coordinate={currantCoordinate}
+              location={currantLocation}
               onClose={() => dispatch(setRightColumnType('list'))}
               onSubmit={(find) => dispatch(addFind(find))}
             />

@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { IFind } from '../../types';
 import styles from './Modal.module.css';
 import cn from 'clsx';
 interface IModal {
   coordinate: string;
+  location: string;
   onClose: () => void;
   className?: string;
   onSubmit: (find: IFind) => void;
@@ -12,6 +13,7 @@ interface IModal {
 
 export const Modal: React.FC<IModal> = ({
   coordinate,
+  location,
   onClose,
   className,
   onSubmit,
@@ -19,6 +21,7 @@ export const Modal: React.FC<IModal> = ({
 }) => {
   const initionalState: IFind = {
     coordinate,
+    location,
     img: '',
     title: '',
     description: '',
@@ -27,21 +30,19 @@ export const Modal: React.FC<IModal> = ({
   const [find, setFind] = useState<IFind>(editFind || initionalState);
 
   const handleSubmit = () => {
-    console.log(onSubmit, find);
     onSubmit(find);
     onClose();
   };
+
+  useEffect(() => {
+    setFind({ ...find, location });
+  }, [location]);
 
   return (
     <div className={cn(className, styles.modal)}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <img src={find.img} alt="моя находка" />
-        <input
-          type="text"
-          placeholder="Координаты"
-          value={coordinate}
-          disabled
-        />
+        <input type="text" placeholder="Координаты" value={location} disabled />
         <input
           type="text"
           placeholder="Название"
