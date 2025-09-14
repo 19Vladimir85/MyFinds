@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { IFind } from '../../types';
+import { LocalStorage } from '../../utils/localStorage';
 
 interface IFindSlice {
   finds: Finds;
@@ -8,18 +9,20 @@ interface IFindSlice {
 
 // type FindSlice = Map<string, IFind>;
 type Finds = Record<string, IFind>;
-
-const initialState: IFindSlice = { finds: {} };
-
+const findsLS = new LocalStorage<Finds>('finds');
+const initialState: IFindSlice = { finds: findsLS.get() || {} };
+console.log(findsLS);
 const findSlice = createSlice({
   name: 'findSlice',
   initialState,
   reducers: {
     addFind: (state, action: PayloadAction<IFind>) => {
       state.finds[action.payload.coordinate] = action.payload;
+      findsLS.set(state.finds);
     },
     deleteFind: (state, action: PayloadAction<string>) => {
       delete state.finds[action.payload];
+      findsLS.set(state.finds);
     },
   },
 });
