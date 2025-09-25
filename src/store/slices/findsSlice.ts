@@ -11,7 +11,6 @@ interface IFindSlice {
 type Finds = Record<string, IFind>;
 const findsLS = new LocalStorage<Finds>('finds');
 const initialState: IFindSlice = { finds: findsLS.get() || {} };
-console.log(findsLS);
 const findSlice = createSlice({
   name: 'findSlice',
   initialState,

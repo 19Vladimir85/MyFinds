@@ -10,6 +10,8 @@ import { setRightColumnType } from './store/slices/appSlice';
 import { addFind } from './store/slices/findsSlice';
 import { formatCoord } from './components/Map/Map';
 import { toLonLat } from 'ol/proj';
+import { SettingsModal } from './components/SettingsModal/SettingsModal';
+import cn from 'clsx';
 
 export interface IUserPosition {
   lat: number;
@@ -21,6 +23,7 @@ function App() {
   const [currentFindID, setCurrentFindID] = useState<string>('');
   const [userPosition, setUserPosition] = useState<IUserPosition>();
   const [currantLocation, setCurrantLocation] = useState<string>('');
+  const [openSettingsModal, setOpenSettingsModal] = useState<boolean>(false);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -35,6 +38,8 @@ function App() {
   const rightColumnType = useSelector(
     (store: RootState) => store.appReducer.rightColumnType
   );
+
+  const theme = useSelector((store: RootState) => store.settingsReducer.theme);
 
   const dispatch = useDispatch();
 
@@ -58,9 +63,23 @@ function App() {
     setCurrentFindID('');
     dispatch(setRightColumnType('list'));
   };
+
+  const onModalOpen = () => {
+    setOpenSettingsModal(true);
+  };
+
   return (
-    <div className={styles.body}>
+    <div
+      className={cn(styles.body, {
+        [styles.light]: theme === 'light',
+        [styles.dark]: theme === 'dark',
+      })}
+    >
       <h1>Карта находок</h1>
+      <button onClick={onModalOpen}>Настройки</button>
+      {openSettingsModal && (
+        <SettingsModal onClick={() => setOpenSettingsModal(false)} />
+      )}
       <div className={styles.wrapper}>
         <div className={styles.leftColumn}>
           <Map

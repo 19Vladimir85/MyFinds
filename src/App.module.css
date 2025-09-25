@@ -25,3 +25,8 @@ h1 {
   padding: 10px;
   box-sizing: border-box;
 }
+
+.dark {
+  color: rgb(203, 201, 201);
+  background-color: rgb(74, 73, 73);
+}
