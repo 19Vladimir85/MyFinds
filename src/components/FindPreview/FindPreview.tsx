@@ -9,7 +9,7 @@ export const FindPreview: React.FC<IFind> = ({
 }) => {
   return (
     <div className={styles.findPreview}>
-      <img src={img} alt={title} />
+      <img src={img || 'default'} alt={title} />
       <div>{title}</div>
       <div>{location}</div>
       <div>{description}</div>

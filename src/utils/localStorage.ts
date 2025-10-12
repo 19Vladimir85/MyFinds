@@ -4,8 +4,9 @@ export class LocalStorage<T> {
     this.key = key;
   }
   get(): T | null {
-    if (localStorage.getItem(this.key)) {
-      return JSON.parse(localStorage.getItem(this.key));
+    const value = localStorage.getItem(this.key);
+    if (value) {
+      return JSON.parse(value);
     }
     return null;
   }

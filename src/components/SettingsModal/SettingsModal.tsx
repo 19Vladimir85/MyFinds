@@ -1,19 +1,25 @@
 import styles from './SettingsModal.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTheme } from '../../store/slices/settingSlice';
+import {
+  setLanguage,
+  setTheme,
+  type Language,
+} from '../../store/slices/settingSlice';
 import type { RootState } from '../../store/store';
 export type Theme = 'light' | 'dark' | 'system';
-interface IThemeButton {
-  id: Theme;
+interface ISettingsButton {
+  id: Theme | Language;
   name: string;
-  onClick: (id: Theme) => void;
+  onClick: (id: Theme | Language) => void;
   isActive: boolean;
+  group: 'Theme' | 'Language';
 }
-const ThemeButton: React.FC<IThemeButton> = ({
+const SettingsButton: React.FC<ISettingsButton> = ({
   id,
   name,
   onClick,
   isActive,
+  group,
 }) => {
   return (
     <>
@@ -21,9 +27,9 @@ const ThemeButton: React.FC<IThemeButton> = ({
         onClick={() => onClick(id)}
         id={id}
         type="radio"
-        name="theme"
+        name={group}
         className={styles.themeInput}
-        checked={isActive}
+        defaultChecked={isActive}
       ></input>
       <label
         className={isActive ? styles.activeLabel : styles.Label}
@@ -45,32 +51,61 @@ export const SettingsModal: React.FC<ISettingsModal> = ({ onClick }) => {
     dispatch(setTheme(id));
   };
 
+  const onChangeLanguage = (id: Language) => {
+    dispatch(setLanguage(id));
+  };
+
   const currentTheme = useSelector(
     (state: RootState) => state.settingsReducer.theme
+  );
+
+  const currentLanguage = useSelector(
+    (state: RootState) => state.settingsReducer.language
   );
 
   return (
     <div className={styles.modal}>
       <button onClick={onClick}>X</button>
       <h2 className={styles.title}>Настройки</h2>
-      <ThemeButton
-        id="light"
-        name="Светлая"
-        onClick={(id) => onChangeTheme(id)} //полный синтаксис
-        isActive={currentTheme === 'light'}
-      />
-      <ThemeButton
-        id="system"
-        name="Системная"
-        onClick={onChangeTheme}
-        isActive={currentTheme === 'system'}
-      />
-      <ThemeButton
-        id="dark"
-        name="Темная"
-        onClick={onChangeTheme}
-        isActive={currentTheme === 'dark'}
-      />
+      <div className={styles.setting}>
+        <SettingsButton
+          id="light"
+          name="Светлая"
+          group="Theme"
+          onClick={(id) => onChangeTheme(id as Theme)} //полный синтаксис
+          isActive={currentTheme === 'light'}
+        />
+        <SettingsButton
+          id="system"
+          name="Системная"
+          group="Theme"
+          onClick={(id) => onChangeTheme(id as Theme)}
+          isActive={currentTheme === 'system'}
+        />
+        <SettingsButton
+          id="dark"
+          name="Темная"
+          group="Theme"
+          onClick={(id) => onChangeTheme(id as Theme)}
+          isActive={currentTheme === 'dark'}
+        />
+      </div>
+      <div className={styles.setting}>
+        <SettingsButton
+          id="Ru"
+          name="Русский"
+          group="Language"
+          onClick={(id) => onChangeLanguage(id as Language)}
+          isActive={currentLanguage === 'Ru'}
+        />
+        <SettingsButton
+          id="En"
+          name="Английский"
+          group="Language"
+          onClick={(id) => onChangeLanguage(id as Language)}
+          isActive={currentLanguage === 'En'}
+        />
+      </div>
     </div>
   );
 };
