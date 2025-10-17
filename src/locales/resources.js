@@ -1,15 +1,11 @@
 import english from './en';
 import russian from './ru';
 
-const resources = {
+export const resources = {
   en: {
-    translation: {
-      english,
-    },
+    translation: english,
   },
   ru: {
-    translation: {
-      russian,
-    },
+    translation: russian,
   },
 };

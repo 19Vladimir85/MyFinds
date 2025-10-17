@@ -1,0 +1,18 @@
+.modal {
+  width: 450px;
+  height: 350px;
+  border: 1px solid grey;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  background-color: rgb(204, 207, 207);
+  z-index: 1000;
+  transform: translate(-50%, -50%);
+  padding-left: 15px;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}

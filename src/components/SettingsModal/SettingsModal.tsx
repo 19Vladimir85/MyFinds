@@ -6,6 +6,8 @@ import {
   type Language,
 } from '../../store/slices/settingSlice';
 import type { RootState } from '../../store/store';
+import { useTranslation } from 'react-i18next';
+
 export type Theme = 'light' | 'dark' | 'system';
 interface ISettingsButton {
   id: Theme | Language;
@@ -51,6 +53,8 @@ export const SettingsModal: React.FC<ISettingsModal> = ({ onClick }) => {
     dispatch(setTheme(id));
   };
 
+  const { t } = useTranslation();
+
   const onChangeLanguage = (id: Language) => {
     dispatch(setLanguage(id));
   };
@@ -65,7 +69,9 @@ export const SettingsModal: React.FC<ISettingsModal> = ({ onClick }) => {
 
   return (
     <div className={styles.modal}>
-      <button onClick={onClick}>X</button>
+      <button className={styles.closeBtn} onClick={onClick}>
+        X
+      </button>
       <h2 className={styles.title}>Настройки</h2>
       <div className={styles.setting}>
         <SettingsButton
@@ -77,14 +83,14 @@ export const SettingsModal: React.FC<ISettingsModal> = ({ onClick }) => {
         />
         <SettingsButton
           id="system"
-          name="Системная"
+          name={t('settings.themes.system')}
           group="Theme"
           onClick={(id) => onChangeTheme(id as Theme)}
           isActive={currentTheme === 'system'}
         />
         <SettingsButton
           id="dark"
-          name="Темная"
+          name={t('settings.themes.dark')}
           group="Theme"
           onClick={(id) => onChangeTheme(id as Theme)}
           isActive={currentTheme === 'dark'}
@@ -92,18 +98,18 @@ export const SettingsModal: React.FC<ISettingsModal> = ({ onClick }) => {
       </div>
       <div className={styles.setting}>
         <SettingsButton
-          id="Ru"
+          id="ru"
           name="Русский"
           group="Language"
           onClick={(id) => onChangeLanguage(id as Language)}
-          isActive={currentLanguage === 'Ru'}
+          isActive={currentLanguage === 'ru'}
         />
         <SettingsButton
-          id="En"
+          id="en"
           name="Английский"
           group="Language"
           onClick={(id) => onChangeLanguage(id as Language)}
-          isActive={currentLanguage === 'En'}
+          isActive={currentLanguage === 'en'}
         />
       </div>
     </div>
