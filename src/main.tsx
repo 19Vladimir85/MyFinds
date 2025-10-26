@@ -4,9 +4,12 @@ import App from './App.tsx';
 import { Provider } from 'react-redux';
 import { store } from './store/store.ts';
 import './i18n';
+import { BrowserRouter } from 'react-router-dom';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </Provider>
 );

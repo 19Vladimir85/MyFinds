@@ -1,0 +1,17 @@
+.wrapper {
+  display: flex;
+  gap: 40px;
+}
+
+.body {
+  padding: 0 25px;
+}
+
+.rightColumn {
+  height: 650px;
+  width: 550px;
+  border: 2px solid green;
+  border-radius: 12px;
+  padding: 10px;
+  box-sizing: border-box;
+}
