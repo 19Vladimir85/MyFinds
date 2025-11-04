@@ -12,6 +12,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
     "clsx": "^2.1.1",
+    "formik": "^2.4.6",
     "i18next": "^25.6.0",
     "ol": "^10.6.1",
     "react": "^19.1.0",
