@@ -1,6 +1,8 @@
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { LocalStorage } from '../../utils/localStorage';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../store/slices/appSlice';
 
 interface Values {
   login: string;
@@ -10,6 +12,7 @@ interface Values {
 export const LoginForm = () => {
   const user = new LocalStorage('user');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const validate = (values: Values) => {
     const errors = {};
@@ -32,6 +35,7 @@ export const LoginForm = () => {
         onSubmit={(values: Values, { setSubmitting }) => {
           user.set(values.login);
           setSubmitting(false);
+          dispatch(setUser(values.login));
           navigate('/');
         }}
         validate={validate}

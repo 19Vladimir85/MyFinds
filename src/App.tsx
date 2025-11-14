@@ -5,9 +5,15 @@ import { setOpenModal } from './store/slices/appSlice';
 import { SettingsModal } from './components/SettingsModal/SettingsModal';
 import cn from 'clsx';
 import { Header } from './components/Header/Header';
-import { Route, Routes } from 'react-router-dom';
-import { MainPage } from './Pages/mainPage/mainPage';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { MainPage } from './Pages/mainPage/MainPage';
 import { RegistrationPage } from './Pages/registrationPage/RegistrationPage';
+import { PersonCabinet } from './Pages/PersonCabinet/PersonCabinet';
+
+const ProtectedRoute = ({ children }) => {
+  const user = useSelector((store: RootState) => store.appReducer.user);
+  return user ? children : <Navigate to="/registration" replace />;
+};
 
 function App() {
   const openModal = useSelector(
@@ -30,6 +36,14 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/registration" element={<RegistrationPage />} />
+        <Route
+          path="/personCabinet"
+          element={
+            <ProtectedRoute>
+              <PersonCabinet />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
   );
