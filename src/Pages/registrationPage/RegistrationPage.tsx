@@ -1,10 +1,10 @@
 import styles from './RegistrationPage.module.css';
-import { LoginForm } from '../../components/Formik/Formik';
+import { RegistrationForm } from '../../components/RegistrationForm/RegistrationForm';
 
 export const RegistrationPage: React.FC = () => {
   return (
     <div className={styles.page}>
-      <LoginForm></LoginForm>
+      <RegistrationForm />
     </div>
   );
 };

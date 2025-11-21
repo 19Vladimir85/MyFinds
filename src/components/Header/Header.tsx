@@ -24,7 +24,7 @@ export const Header: React.FC = () => {
       {isUser ? (
         <button onClick={logOut}>Выйти</button>
       ) : (
-        <Link to="/registration">
+        <Link to="/login">
           <button>Войти</button>
         </Link>
       )}

@@ -9,6 +9,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { MainPage } from './Pages/mainPage/MainPage';
 import { RegistrationPage } from './Pages/registrationPage/RegistrationPage';
 import { PersonCabinet } from './Pages/PersonCabinet/PersonCabinet';
+import { LoginPage } from './Pages/LoginPage/LoginPage';
 
 const ProtectedRoute = ({ children }) => {
   const user = useSelector((store: RootState) => store.appReducer.user);
@@ -44,6 +45,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </div>
   );
