@@ -28,11 +28,10 @@ export const RegistrationForm: React.FC = () => {
   };
 
   let userSchema = object({
-    name: string().required(),
-    age: number().required().positive().integer(),
+    login: string().required(),
     email: string().email(),
-    website: string().url().nullable(),
-    createdOn: date().default(() => new Date()),
+    password: string().required(),
+    confirmPassword: string().required(),
   });
 
   return (

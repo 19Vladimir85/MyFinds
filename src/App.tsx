@@ -10,6 +10,13 @@ import { MainPage } from './Pages/mainPage/MainPage';
 import { RegistrationPage } from './Pages/registrationPage/RegistrationPage';
 import { PersonCabinet } from './Pages/PersonCabinet/PersonCabinet';
 import { LoginPage } from './Pages/LoginPage/LoginPage';
+import { useEffect, useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
+
+export const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
+);
 
 const ProtectedRoute = ({ children }) => {
   const user = useSelector((store: RootState) => store.appReducer.user);
@@ -17,6 +24,15 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
+  const [instruments, setInstruments] = useState([]);
+  useEffect(() => {
+    getInstruments();
+  }, []);
+  async function getInstruments() {
+    const { data } = await supabase.from('finds').select();
+    setInstruments(data);
+  }
+
   const openModal = useSelector(
     (store: RootState) => store.appReducer.openModal
   );
@@ -24,6 +40,12 @@ function App() {
   const theme = useSelector((store: RootState) => store.settingsReducer.theme);
 
   const dispatch = useDispatch();
+
+  const onClick = async () => {
+    await supabase
+      .from('finds')
+      .insert([{ title: 'Монета', description: 'Золотая' }]);
+  };
 
   return (
     <div
@@ -33,6 +55,7 @@ function App() {
       })}
     >
       <Header />
+      <button onClick={onClick}>Добавить</button>
       {openModal && <SettingsModal onClick={() => dispatch(setOpenModal())} />}
       <Routes>
         <Route path="/" element={<MainPage />} />

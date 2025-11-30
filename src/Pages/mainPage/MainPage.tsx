@@ -9,6 +9,8 @@ import styles from './MainPage.module.css';
 import { setRightColumnType } from '../../store/slices/appSlice';
 import { addFind } from '../../store/slices/findsSlice';
 import { toLonLat } from 'ol/proj';
+import { supabase } from '../../App';
+import type { IFind } from '../../types';
 
 export interface IUserPosition {
   lat: number;
@@ -58,6 +60,13 @@ export const MainPage: React.FC = () => {
     dispatch(setRightColumnType('list'));
   };
 
+  const onSubmit = async (find: IFind) => {
+    dispatch(addFind(find));
+    await supabase.from('finds').insert([find]);
+    // await supabase.from('finds').select();
+    console.log(find);
+  };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.leftColumn}>
@@ -77,7 +86,7 @@ export const MainPage: React.FC = () => {
             coordinate={currantCoordinate}
             location={currantLocation}
             onClose={() => dispatch(setRightColumnType('list'))}
-            onSubmit={(find) => dispatch(addFind(find))}
+            onSubmit={onSubmit}
           />
         )}
         {rightColumnType === 'list' && <FindList />}
