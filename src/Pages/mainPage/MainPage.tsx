@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react';
 import { Map, formatCoord } from '../../components/Map/Map';
 import { Modal } from '../../components/Modal/Modal';
 import { useSelector, useDispatch } from 'react-redux';
-import type { RootState } from '../../store/store';
+import type { RootState, store } from '../../store/store';
 import { FindCard } from '../../components/FindCard/FindCard';
 import { FindList } from '../../components/FindList/FindList';
 import styles from './MainPage.module.css';
 import { setRightColumnType } from '../../store/slices/appSlice';
-import { addFind } from '../../store/slices/findsSlice';
 import { toLonLat } from 'ol/proj';
-import { supabase } from '../../App';
 import type { IFind } from '../../types';
+import { addFindThunk, fetchFindsThunk } from '../../store/thunk/findsThunk';
 
 export interface IUserPosition {
   lat: number;
@@ -29,6 +28,11 @@ export const MainPage: React.FC = () => {
       setUserPosition({ lat: latitude, long: longitude });
     });
   }, []);
+
+  useEffect(() => {
+    dispatch(fetchFindsThunk());
+  });
+
   const find = useSelector(
     (store: RootState) => store.findReducer.finds[currentFindID]
   );
@@ -37,7 +41,9 @@ export const MainPage: React.FC = () => {
     (store: RootState) => store.appReducer.rightColumnType
   );
 
-  const dispatch = useDispatch();
+  type AppDispatch = typeof store.dispatch;
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleMarkerClick = (coordinate: string) => {
     setCurrentFindID(coordinate);
@@ -61,10 +67,7 @@ export const MainPage: React.FC = () => {
   };
 
   const onSubmit = async (find: IFind) => {
-    dispatch(addFind(find));
-    await supabase.from('finds').insert([find]);
-    // await supabase.from('finds').select();
-    console.log(find);
+    dispatch(addFindThunk(find));
   };
 
   return (

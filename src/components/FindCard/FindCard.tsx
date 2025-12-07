@@ -1,10 +1,9 @@
 import { useDispatch } from 'react-redux';
 import type { IFind } from '../../types';
 import styles from './FindCard.module.css';
-import { addFind, deleteFind } from '../../store/slices/findsSlice';
+import { deleteFind } from '../../store/slices/findsSlice';
 import { useState } from 'react';
 import { Modal } from '../Modal/Modal';
-import { supabase } from '../../App';
 
 interface IFindCard extends IFind {
   onClose: () => void;
@@ -27,9 +26,6 @@ export const FindCard: React.FC<IFindCard> = ({
   };
 
   const onSubmit = async (find: IFind) => {
-    dispatch(addFind(find));
-    await supabase.from('finds').insert([find]);
-    // await supabase.from('finds').select();
     console.log(find);
   };
 

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { IFind } from '../../types';
-import { LocalStorage } from '../../utils/localStorage';
+import { addFindThunk, fetchFindsThunk } from '../thunk/findsThunk';
 
 interface IFindSlice {
   finds: Finds;
@@ -9,22 +9,29 @@ interface IFindSlice {
 
 // type FindSlice = Map<string, IFind>;
 type Finds = Record<string, IFind>;
-const findsLS = new LocalStorage<Finds>('finds');
-const initialState: IFindSlice = { finds: findsLS.get() || {} };
+
+const initialState: IFindSlice = { finds: {} };
 const findSlice = createSlice({
   name: 'findSlice',
   initialState,
   reducers: {
-    addFind: (state, action: PayloadAction<IFind>) => {
-      state.finds[action.payload.coordinate] = action.payload;
-      findsLS.set(state.finds);
-    },
     deleteFind: (state, action: PayloadAction<string>) => {
       delete state.finds[action.payload];
-      findsLS.set(state.finds);
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(addFindThunk.fulfilled, (state, action) => {
+      state.finds[action.payload.coordinate!] = action.payload;
+    });
+    builder.addCase(fetchFindsThunk.fulfilled, (state, action) => {
+      const finds: Finds = {};
+      action.payload.forEach((el: IFind) => {
+        finds[el.coordinate] = el;
+      });
+      state.finds = finds;
+    });
   },
 });
 
-export const { addFind, deleteFind } = findSlice.actions;
+export const { deleteFind } = findSlice.actions;
 export const findReducer = findSlice.reducer;

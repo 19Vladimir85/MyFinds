@@ -41,12 +41,6 @@ function App() {
 
   const dispatch = useDispatch();
 
-  const onClick = async () => {
-    await supabase
-      .from('finds')
-      .insert([{ title: 'Монета', description: 'Золотая' }]);
-  };
-
   return (
     <div
       className={cn(styles.body, {
@@ -55,7 +49,6 @@ function App() {
       })}
     >
       <Header />
-      <button onClick={onClick}>Добавить</button>
       {openModal && <SettingsModal onClick={() => dispatch(setOpenModal())} />}
       <Routes>
         <Route path="/" element={<MainPage />} />
