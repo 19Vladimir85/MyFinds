@@ -4,12 +4,15 @@ import styles from './FindCard.module.css';
 import { deleteFind } from '../../store/slices/findsSlice';
 import { useState } from 'react';
 import { Modal } from '../Modal/Modal';
+import { updateFindThunk } from '../../store/thunk/findsThunk';
+import type { store } from '../../store/store';
 
 interface IFindCard extends IFind {
   onClose: () => void;
 }
 
 export const FindCard: React.FC<IFindCard> = ({
+  id,
   coordinate,
   location,
   img,
@@ -17,8 +20,10 @@ export const FindCard: React.FC<IFindCard> = ({
   description,
   onClose,
 }) => {
+  type AppDispatch = typeof store.dispatch;
+
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const onDelete = (coordinate: string) => {
     dispatch(deleteFind(coordinate));
@@ -26,7 +31,7 @@ export const FindCard: React.FC<IFindCard> = ({
   };
 
   const onSubmit = async (find: IFind) => {
-    console.log(find);
+    dispatch(updateFindThunk({ index: id!, find }));
   };
 
   return (

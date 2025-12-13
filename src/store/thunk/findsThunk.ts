@@ -1,4 +1,4 @@
-import { getFinds, addFind, deleteFind } from '../../api/findsApi';
+import { getFinds, addFind, deleteFind, updateFind } from '../../api/findsApi';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import type { IFind } from '../../types';
 
@@ -17,5 +17,12 @@ export const deleteFindThunk = createAsyncThunk(
   'finds/delete',
   async (index: number) => {
     return await deleteFind(index);
+  }
+);
+
+export const updateFindThunk = createAsyncThunk(
+  'finds/update',
+  async ({ index, find }: { index: number; find: IFind }) => {
+    return await updateFind(index, find);
   }
 );

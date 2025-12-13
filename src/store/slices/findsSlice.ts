@@ -1,7 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { IFind } from '../../types';
-import { addFindThunk, fetchFindsThunk } from '../thunk/findsThunk';
+import {
+  addFindThunk,
+  fetchFindsThunk,
+  deleteFindThunk,
+  updateFindThunk,
+} from '../thunk/findsThunk';
 
 interface IFindSlice {
   finds: Finds;
@@ -29,6 +34,9 @@ const findSlice = createSlice({
         finds[el.coordinate] = el;
       });
       state.finds = finds;
+    });
+    builder.addCase(updateFindThunk.fulfilled, (state, action) => {
+      state.finds[action.payload.coordinate] = action.payload;
     });
   },
 });

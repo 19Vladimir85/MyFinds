@@ -1,4 +1,5 @@
 export interface IFind {
+  id?: number;
   coordinate: string;
   location: string;
   img: string;

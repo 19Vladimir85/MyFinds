@@ -9,7 +9,11 @@ import styles from './MainPage.module.css';
 import { setRightColumnType } from '../../store/slices/appSlice';
 import { toLonLat } from 'ol/proj';
 import type { IFind } from '../../types';
-import { addFindThunk, fetchFindsThunk } from '../../store/thunk/findsThunk';
+import {
+  addFindThunk,
+  fetchFindsThunk,
+  updateFindThunk,
+} from '../../store/thunk/findsThunk';
 
 export interface IUserPosition {
   lat: number;
@@ -31,7 +35,7 @@ export const MainPage: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchFindsThunk());
-  });
+  }, []);
 
   const find = useSelector(
     (store: RootState) => store.findReducer.finds[currentFindID]
@@ -70,8 +74,25 @@ export const MainPage: React.FC = () => {
     dispatch(addFindThunk(find));
   };
 
+  const onClick = () => {
+    dispatch(
+      updateFindThunk({
+        index: 3,
+        find: {
+          coordinate: '4102213.875812492,7924932.216171227',
+          description: 'Золотых монет',
+          img: '',
+          location:
+            'Бежецкий муниципальный округ, Тверская область, Центральный федеральный округ, Россия',
+          title: 'Крестик',
+        },
+      })
+    );
+  };
+
   return (
     <div className={styles.wrapper}>
+      <button onClick={onClick}>Нажми</button>
       <div className={styles.leftColumn}>
         <Map
           onMarkerClick={handleMarkerClick}

@@ -1,3 +1,4 @@
+import { data } from 'react-router-dom';
 import { supabase } from '../App';
 import type { IFind } from '../types';
 
@@ -19,4 +20,15 @@ export const deleteFind = async (index: number) => {
     .eq('id', index)
     .select();
   return data as IFind[];
+};
+
+export const updateFind = async (index: number, find: IFind) => {
+  const { data } = await supabase
+    .from('finds')
+    .update(find)
+    .eq('id', index)
+    .select()
+    .eq('id', index);
+  console.log(data);
+  return data![0] as IFind;
 };
