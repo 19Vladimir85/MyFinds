@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
 import type { IFind } from '../../types';
 import {
   addFindThunk,
@@ -19,11 +18,7 @@ const initialState: IFindSlice = { finds: {} };
 const findSlice = createSlice({
   name: 'findSlice',
   initialState,
-  reducers: {
-    deleteFind: (state, action: PayloadAction<string>) => {
-      delete state.finds[action.payload];
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(addFindThunk.fulfilled, (state, action) => {
       state.finds[action.payload.coordinate!] = action.payload;
@@ -38,8 +33,10 @@ const findSlice = createSlice({
     builder.addCase(updateFindThunk.fulfilled, (state, action) => {
       state.finds[action.payload.coordinate] = action.payload;
     });
+    builder.addCase(deleteFindThunk.fulfilled, (state, action) => {
+      delete state.finds[action.payload.coordinate!];
+    });
   },
 });
 
-export const { deleteFind } = findSlice.actions;
 export const findReducer = findSlice.reducer;

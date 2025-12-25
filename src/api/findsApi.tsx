@@ -19,7 +19,7 @@ export const deleteFind = async (index: number) => {
     .delete()
     .eq('id', index)
     .select();
-  return data as IFind[];
+  return data![0] as IFind;
 };
 
 export const updateFind = async (index: number, find: IFind) => {

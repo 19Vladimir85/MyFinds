@@ -82,6 +82,7 @@ export const Map: React.FC<IMap> = ({
         const geometry = feature.getGeometry();
         if (geometry instanceof Point) {
           onMarkerClick(formatCoord(geometry.getCoordinates()));
+
           flag = false;
         }
       });
