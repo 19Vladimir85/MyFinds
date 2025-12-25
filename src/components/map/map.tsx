@@ -37,7 +37,7 @@ export const Map: React.FC<IMap> = ({
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const finds = useSelector((store: RootState) => store.findReducer.finds);
-  const features = Object.entries(finds).map(([coord, find]) => {
+  const features = finds.map((find) => {
     const iconStyle = new Style({
       image: new Icon({
         anchor: [0.5, 46],
@@ -48,7 +48,7 @@ export const Map: React.FC<IMap> = ({
       }),
     });
     const dot = new Feature({
-      geometry: new Point(parseCoord(coord)),
+      geometry: new Point(parseCoord(find.coordinate)),
     });
     dot.setStyle(iconStyle);
     return dot;

@@ -8,33 +8,28 @@ import {
 } from '../thunk/findsThunk';
 
 interface IFindSlice {
-  finds: Finds;
+  finds: IFind[];
 }
 
-// type FindSlice = Map<string, IFind>;
-type Finds = Record<string, IFind>;
-
-const initialState: IFindSlice = { finds: {} };
+const initialState: IFindSlice = { finds: [] };
 const findSlice = createSlice({
   name: 'findSlice',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(addFindThunk.fulfilled, (state, action) => {
-      state.finds[action.payload.coordinate!] = action.payload;
+      state.finds.push(action.payload);
     });
     builder.addCase(fetchFindsThunk.fulfilled, (state, action) => {
-      const finds: Finds = {};
-      action.payload.forEach((el: IFind) => {
-        finds[el.coordinate] = el;
-      });
-      state.finds = finds;
+      state.finds = action.payload;
     });
     builder.addCase(updateFindThunk.fulfilled, (state, action) => {
-      state.finds[action.payload.coordinate] = action.payload;
+      state.finds.map((find) =>
+        action.payload.id !== find.id ? find : action.payload
+      );
     });
     builder.addCase(deleteFindThunk.fulfilled, (state, action) => {
-      delete state.finds[action.payload.coordinate!];
+      state.finds.filter((find) => find.id !== action.payload.id);
     });
   },
 });
