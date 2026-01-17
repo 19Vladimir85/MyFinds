@@ -26,6 +26,7 @@ export const FindCard: React.FC<IFindCard> = ({
 
   const onDelete = (id: number) => {
     dispatch(deleteFindThunk(id));
+    console.log(id);
     onClose();
   };
 

@@ -37,8 +37,8 @@ export const MainPage: React.FC = () => {
     dispatch(fetchFindsThunk());
   }, []);
 
-  const find = useSelector(
-    (store: RootState) => store.findReducer.finds[currentFindID]
+  const find = useSelector((store: RootState) =>
+    store.findReducer.finds.find((el) => el.coordinate === currentFindID)
   );
 
   const rightColumnType = useSelector(
@@ -74,22 +74,8 @@ export const MainPage: React.FC = () => {
     dispatch(addFindThunk(find));
   };
 
-  const onClick = () => {
-    dispatch(
-      addFindThunk({
-        coordinate: '4102213.875812492,7924932.216171227',
-        description: 'Золотых монет',
-        img: '',
-        location:
-          'Бежецкий муниципальный округ, Тверская область, Центральный федеральный округ, Россия',
-        title: 'Крестик',
-      })
-    );
-  };
-
   return (
     <div className={styles.wrapper}>
-      <button onClick={onClick}>Нажми</button>
       <div className={styles.leftColumn}>
         <Map
           onMarkerClick={handleMarkerClick}
@@ -110,7 +96,7 @@ export const MainPage: React.FC = () => {
             onSubmit={onSubmit}
           />
         )}
-        {rightColumnType === 'list' && <FindList />}
+        {rightColumnType === 'list' && <FindList onClick={handleMarkerClick} />}
       </div>
     </div>
   );
