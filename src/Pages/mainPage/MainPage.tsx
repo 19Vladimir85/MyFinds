@@ -14,6 +14,7 @@ import {
   fetchFindsThunk,
   updateFindThunk,
 } from '../../store/thunk/findsThunk';
+import { List } from '../../components/List/List';
 
 export interface IUserPosition {
   lat: number;
@@ -38,11 +39,11 @@ export const MainPage: React.FC = () => {
   }, []);
 
   const find = useSelector((store: RootState) =>
-    store.findReducer.finds.find((el) => el.coordinate === currentFindID)
+    store.findReducer.finds?.find((el) => el.coordinate === currentFindID),
   );
 
   const rightColumnType = useSelector(
-    (store: RootState) => store.appReducer.rightColumnType
+    (store: RootState) => store.appReducer.rightColumnType,
   );
 
   type AppDispatch = typeof store.dispatch;
@@ -82,6 +83,7 @@ export const MainPage: React.FC = () => {
           onClick={handleMapClick}
           onReset={handleResetState}
           userPosition={userPosition}
+          currentFindCoord={currentFindID}
         />
       </div>
       <div className={styles.rightColumn}>
@@ -96,7 +98,7 @@ export const MainPage: React.FC = () => {
             onSubmit={onSubmit}
           />
         )}
-        {rightColumnType === 'list' && <FindList onClick={handleMarkerClick} />}
+        {rightColumnType === 'list' && <List onClick={handleMarkerClick} />}
       </div>
     </div>
   );

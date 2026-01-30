@@ -27,6 +27,7 @@ interface IMap {
   onMarkerClick: (coordinate: string) => void;
   onReset: () => void;
   userPosition?: IUserPosition;
+  currentFindCoord: string;
 }
 
 export const Map: React.FC<IMap> = ({
@@ -34,12 +35,14 @@ export const Map: React.FC<IMap> = ({
   onMarkerClick,
   onReset,
   userPosition,
+  currentFindCoord,
 }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const finds = useSelector((store: RootState) => store.findReducer.finds);
   const features = finds.map((find) => {
     const iconStyle = new Style({
       image: new Icon({
+        color: currentFindCoord === find.coordinate ? '#f00' : undefined,
         anchor: [0.5, 46],
         anchorXUnits: 'fraction',
         anchorYUnits: 'pixels',
@@ -91,7 +94,7 @@ export const Map: React.FC<IMap> = ({
     return () => {
       map.setTarget(undefined);
     };
-  }, [finds, userPosition]);
+  }, [finds, userPosition, currentFindCoord]);
 
   return <div ref={mapRef} style={{ height: 650, width: 750 }}></div>;
 };
