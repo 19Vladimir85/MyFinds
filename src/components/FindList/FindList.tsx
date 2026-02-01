@@ -13,7 +13,7 @@ export const FindList: React.FC<IFindList> = ({ onClick }) => {
     <div className={styles.list}>
       {Object.keys(findlist).length !== 0 ? (
         Object.values(findlist).map((el) => (
-          <FindPreview onClick={onClick} {...el} key={el.coordinate} />
+          <FindPreview onClick={onClick} {...el} key={el.id} />
         ))
       ) : (
         <div>Добавьте находку кликнув на карту</div>

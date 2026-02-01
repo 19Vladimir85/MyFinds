@@ -6,3 +6,11 @@ export interface IFind {
   title: string;
   description: string;
 }
+
+export interface IDistrict {
+  name: string;
+  polygon?: number[];
+  finds?: number[];
+  description: string;
+  id?: number;
+}

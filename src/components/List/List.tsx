@@ -1,13 +1,39 @@
+import { useState } from 'react';
 import { FindList } from '../FindList/FindList';
+import style from './List.module.css';
+import cn from 'clsx';
+import { DistrictList } from '../DistrictList/DistrictList';
 
 interface IList {
   onClick: (coordinate: string) => void;
 }
 
+type Tab = 'find' | 'district';
+
 export const List: React.FC<IList> = ({ onClick }) => {
+  const [activeTab, setActivTab] = useState<Tab>('find');
+
+  const onChange = (activeTab: Tab) => {
+    setActivTab(activeTab);
+  };
   return (
-    <div>
-      <FindList onClick={onClick}></FindList>
+    <div className={style.wrapper}>
+      <button
+        className={cn(style.tab, { [style.active]: activeTab === 'find' })}
+        onClick={() => onChange('find')}
+      >
+        Находки
+      </button>
+      <button
+        className={cn(style.tab, { [style.active]: activeTab === 'district' })}
+        onClick={() => onChange('district')}
+      >
+        Районы
+      </button>
+      <div className={style.list}>
+        {activeTab === 'find' && <FindList onClick={onClick}></FindList>}
+        {activeTab === 'district' && <DistrictList />}
+      </div>
     </div>
   );
 };

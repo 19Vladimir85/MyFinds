@@ -18,7 +18,7 @@ export const Header: React.FC = () => {
   return (
     <div className={styles.header}>
       <Link to="/">
-        <h1>Карта находок</h1>
+        <h1 className={styles.title}>Карта находок</h1>
       </Link>
       <button onClick={() => dispatch(setOpenModal())}>Настройки</button>
       {isUser ? (
