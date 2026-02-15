@@ -14,6 +14,7 @@ import {
   fetchFindsThunk,
   updateFindThunk,
 } from '../../store/thunk/findsThunk';
+import { getDistrictThunk } from '../../store/thunk/districtThunk';
 import { List } from '../../components/List/List';
 
 export interface IUserPosition {
@@ -36,6 +37,10 @@ export const MainPage: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchFindsThunk());
+  }, []);
+
+  useEffect(() => {
+    dispatch(getDistrictThunk());
   }, []);
 
   const find = useSelector((store: RootState) =>

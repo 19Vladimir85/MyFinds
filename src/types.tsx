@@ -5,6 +5,7 @@ export interface IFind {
   img: string;
   title: string;
   description: string;
+  districtId: number;
 }
 
 export interface IDistrict {
