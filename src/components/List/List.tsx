@@ -6,11 +6,12 @@ import { DistrictList } from '../DistrictList/DistrictList';
 
 interface IList {
   onClick: (coordinate: string) => void;
+  onDistrictClick: (id: number) => void;
 }
 
 type Tab = 'find' | 'district';
 
-export const List: React.FC<IList> = ({ onClick }) => {
+export const List: React.FC<IList> = ({ onClick, onDistrictClick }) => {
   const [activeTab, setActivTab] = useState<Tab>('find');
 
   const onChange = (activeTab: Tab) => {
@@ -32,7 +33,7 @@ export const List: React.FC<IList> = ({ onClick }) => {
       </button>
       <div className={style.list}>
         {activeTab === 'find' && <FindList onClick={onClick}></FindList>}
-        {activeTab === 'district' && <DistrictList />}
+        {activeTab === 'district' && <DistrictList onClick={onDistrictClick} />}
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ export interface IFind {
 }
 
 export interface IDistrict {
-  title: string;
+  title?: string;
   polygon?: number[];
   findsCount?: number[];
   description: string;

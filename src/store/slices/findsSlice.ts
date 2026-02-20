@@ -24,12 +24,12 @@ const findSlice = createSlice({
       state.finds = action.payload;
     });
     builder.addCase(updateFindThunk.fulfilled, (state, action) => {
-      state.finds.map((find) =>
-        action.payload.id !== find.id ? find : action.payload
+      state.finds = state.finds.map((find) =>
+        action.payload.id !== find.id ? find : action.payload,
       );
     });
     builder.addCase(deleteFindThunk.fulfilled, (state, action) => {
-      state.finds.filter((find) => find.id !== action.payload.id);
+      state.finds = state.finds.filter((find) => find.id !== action.payload.id);
     });
   },
 });

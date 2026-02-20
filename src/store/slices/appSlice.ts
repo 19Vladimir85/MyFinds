@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { LocalStorage } from '../../utils/localStorage';
 
-type RightColumnType = 'list' | 'card' | 'modal';
+type RightColumnType = 'list' | 'card' | 'modal' | 'district';
 interface IAppSlice {
   rightColumnType: RightColumnType;
   openModal: boolean;

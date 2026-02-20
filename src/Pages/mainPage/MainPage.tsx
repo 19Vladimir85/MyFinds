@@ -16,6 +16,7 @@ import {
 } from '../../store/thunk/findsThunk';
 import { getDistrictThunk } from '../../store/thunk/districtThunk';
 import { List } from '../../components/List/List';
+import { DistrictPreview } from '../../components/DistrictPreview/DistrictPreview';
 
 export interface IUserPosition {
   lat: number;
@@ -27,6 +28,7 @@ export const MainPage: React.FC = () => {
   const [currentFindID, setCurrentFindID] = useState<string>('');
   const [userPosition, setUserPosition] = useState<IUserPosition>();
   const [currantLocation, setCurrantLocation] = useState<string>('');
+  const [currentDistrictID, setCurrentDistrictID] = useState<number>();
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -55,7 +57,7 @@ export const MainPage: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleMarkerClick = (coordinate: string) => {
+  const handleOpenFind = (coordinate: string) => {
     setCurrentFindID(coordinate);
     dispatch(setRightColumnType('card'));
   };
@@ -80,11 +82,20 @@ export const MainPage: React.FC = () => {
     dispatch(addFindThunk(find));
   };
 
+  const handleOpenDistrict = (id: number) => {
+    setCurrentDistrictID(id);
+    dispatch(setRightColumnType('district'));
+  };
+
+  const district = useSelector((store: RootState) =>
+    store.districtReducer.districts.find((el) => el.id === currentDistrictID),
+  );
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.leftColumn}>
         <Map
-          onMarkerClick={handleMarkerClick}
+          onMarkerClick={handleOpenFind}
           onClick={handleMapClick}
           onReset={handleResetState}
           userPosition={userPosition}
@@ -103,7 +114,10 @@ export const MainPage: React.FC = () => {
             onSubmit={onSubmit}
           />
         )}
-        {rightColumnType === 'list' && <List onClick={handleMarkerClick} />}
+        {rightColumnType === 'list' && (
+          <List onDistrictClick={handleOpenDistrict} onClick={handleOpenFind} />
+        )}
+        {rightColumnType === 'district' && <DistrictPreview {...district} />}
       </div>
     </div>
   );
