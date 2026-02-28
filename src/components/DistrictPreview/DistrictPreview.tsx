@@ -1,11 +1,17 @@
 import type { IDistrict } from '../../types';
 import styles from './DistrictPreview.module.css';
 import { useFindsDistrictSelector } from '../../store/selectors/useFindsDistrictSelector';
+import type { Tab } from '../List/List';
 
-export const DistrictPreview: React.FC<IDistrict> = ({
+interface IDistrictPreview extends IDistrict {
+  onClose: (tab: Tab) => void;
+}
+
+export const DistrictPreview: React.FC<IDistrictPreview> = ({
   title,
   description,
   id,
+  onClose,
 }) => {
   const findsTitles = useFindsDistrictSelector(id!);
 
@@ -18,6 +24,7 @@ export const DistrictPreview: React.FC<IDistrict> = ({
           {el}
         </div>
       ))}
+      <button onClick={() => onClose('district')}>Х</button>
     </div>
   );
 };

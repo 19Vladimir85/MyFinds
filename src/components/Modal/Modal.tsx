@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import type { IFind } from '../../types';
 import styles from './Modal.module.css';
 import cn from 'clsx';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../store/store';
+
 interface IModal {
   coordinate: string;
   location: string;
@@ -25,6 +28,7 @@ export const Modal: React.FC<IModal> = ({
     img: '',
     title: '',
     description: '',
+    districtId: 1,
   };
 
   const [find, setFind] = useState<IFind>(editFind || initionalState);
@@ -37,6 +41,10 @@ export const Modal: React.FC<IModal> = ({
   useEffect(() => {
     setFind({ ...find, location });
   }, [location]);
+
+  const categories = useSelector(
+    (store: RootState) => store.districtReducer.districts,
+  );
 
   return (
     <div className={cn(className, styles.modal)}>
@@ -63,6 +71,18 @@ export const Modal: React.FC<IModal> = ({
           value={find.img}
           onChange={(event) => setFind({ ...find, img: event.target.value })}
         />
+        <select
+          value={find.districtId}
+          onChange={(event) =>
+            setFind({ ...find, districtId: +event.target.value })
+          }
+        >
+          {categories.map((el) => (
+            <option key={el.id} value={el.id}>
+              {el.title}
+            </option>
+          ))}
+        </select>
         <button type="submit">Сохранить</button>
         <button type="reset" onClick={onClose}>
           Закрыть

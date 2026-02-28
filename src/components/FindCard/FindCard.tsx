@@ -5,9 +5,10 @@ import { useState } from 'react';
 import { Modal } from '../Modal/Modal';
 import { deleteFindThunk, updateFindThunk } from '../../store/thunk/findsThunk';
 import type { store } from '../../store/store';
+import type { Tab } from '../List/List';
 
 interface IFindCard extends IFind {
-  onClose: () => void;
+  onClose: (tab: Tab) => void;
 }
 
 export const FindCard: React.FC<IFindCard> = ({
@@ -26,7 +27,7 @@ export const FindCard: React.FC<IFindCard> = ({
 
   const onDelete = (id: number) => {
     dispatch(deleteFindThunk(id));
-    onClose();
+    onClose('find');
   };
 
   const onSubmit = async (find: IFind) => {
@@ -45,7 +46,7 @@ export const FindCard: React.FC<IFindCard> = ({
         />
       ) : (
         <div className={styles.FindPreview}>
-          <button onClick={onClose}>Закрыть</button>
+          <button onClick={() => onClose('find')}>Закрыть</button>
           <img src={img} alt={title} />
           <div>{title}</div>
           <div>{location}</div>

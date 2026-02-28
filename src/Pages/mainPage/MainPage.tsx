@@ -17,6 +17,7 @@ import {
 import { getDistrictThunk } from '../../store/thunk/districtThunk';
 import { List } from '../../components/List/List';
 import { DistrictPreview } from '../../components/DistrictPreview/DistrictPreview';
+import type { Tab } from '../../components/List/List';
 
 export interface IUserPosition {
   lat: number;
@@ -29,6 +30,7 @@ export const MainPage: React.FC = () => {
   const [userPosition, setUserPosition] = useState<IUserPosition>();
   const [currantLocation, setCurrantLocation] = useState<string>('');
   const [currentDistrictID, setCurrentDistrictID] = useState<number>();
+  const [currentListTab, setCurrentListTab] = useState<Tab>('find');
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -73,9 +75,9 @@ export const MainPage: React.FC = () => {
     dispatch(setRightColumnType('modal'));
   };
 
-  const handleResetState = () => {
-    setCurrentFindID('');
+  const handleResetState = (tab: Tab) => {
     dispatch(setRightColumnType('list'));
+    setCurrentListTab(tab);
   };
 
   const onSubmit = async (find: IFind) => {
@@ -115,9 +117,15 @@ export const MainPage: React.FC = () => {
           />
         )}
         {rightColumnType === 'list' && (
-          <List onDistrictClick={handleOpenDistrict} onClick={handleOpenFind} />
+          <List
+            onDistrictClick={handleOpenDistrict}
+            onClick={handleOpenFind}
+            initialTab={currentListTab}
+          />
         )}
-        {rightColumnType === 'district' && <DistrictPreview {...district} />}
+        {rightColumnType === 'district' && (
+          <DistrictPreview {...district} onClose={handleResetState} />
+        )}
       </div>
     </div>
   );
