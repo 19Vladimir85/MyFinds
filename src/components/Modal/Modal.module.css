@@ -8,3 +8,8 @@
   flex-direction: column;
   gap: 12px;
 }
+
+.findImg {
+  width: 150px;
+  height: auto;
+}

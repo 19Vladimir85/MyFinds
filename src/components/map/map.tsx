@@ -42,6 +42,7 @@ export const Map: React.FC<IMap> = ({
   const features = finds.map((find) => {
     const iconStyle = new Style({
       image: new Icon({
+        size: [50, 50],
         color: currentFindCoord === find.coordinate ? '#f00' : undefined,
         anchor: [0.5, 46],
         anchorXUnits: 'fraction',

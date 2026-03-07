@@ -31,11 +31,33 @@ export const Modal: React.FC<IModal> = ({
     districtId: 1,
   };
 
+  type ImageSource = 'url' | 'file';
+
   const [find, setFind] = useState<IFind>(editFind || initionalState);
+  const [imageSource, setImageSource] = useState<ImageSource>('url');
+  const [previewUrl, setPreviewUrl] = useState<string | null | ArrayBuffer>(
+    null,
+  );
 
   const handleSubmit = () => {
     onSubmit(find);
+    console.log('++++++');
     onClose();
+  };
+
+  const chooseImageSource = (type: ImageSource, event) => {
+    event.stopPropagation();
+    setImageSource(type);
+  };
+
+  const handleUpLoadFile = (event) => {
+    const file = event.target.files[0];
+    console.log(event.target.files);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
   useEffect(() => {
@@ -49,7 +71,9 @@ export const Modal: React.FC<IModal> = ({
   return (
     <div className={cn(className, styles.modal)}>
       <form className={styles.form} onSubmit={handleSubmit}>
-        <img src={find.img} alt="моя находка" />
+        {previewUrl && (
+          <img src={previewUrl} className={styles.findImg} alt="моя находка" />
+        )}
         <input type="text" placeholder="Координаты" value={location} disabled />
         <input
           type="text"
@@ -65,12 +89,31 @@ export const Modal: React.FC<IModal> = ({
             setFind({ ...find, description: event.target.value })
           }
         />
-        <input
-          type="text"
-          placeholder="Изображение"
-          value={find.img}
-          onChange={(event) => setFind({ ...find, img: event.target.value })}
-        />
+        <button
+          type="button"
+          onClick={(event) => chooseImageSource('url', event)}
+        >
+          Загрузить через url
+        </button>
+        <button
+          type="button"
+          onClick={(event) => chooseImageSource('file', event)}
+        >
+          Загрузить через файл
+        </button>
+        {imageSource === 'url' ? (
+          <input
+            type="text"
+            placeholder="Изображение"
+            value={find.img}
+            onChange={(event) => {
+              setFind({ ...find, img: event.target.value });
+              setPreviewUrl(event.target.value);
+            }}
+          />
+        ) : (
+          <input type="file" accept="image/*" onChange={handleUpLoadFile} />
+        )}
         <select
           value={find.districtId}
           onChange={(event) =>
