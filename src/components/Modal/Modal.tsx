@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ChangeEvent } from 'react';
 import type { IFind } from '../../types';
 import styles from './Modal.module.css';
 import cn from 'clsx';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
+import { supabase } from '../../App';
+import { uuidv4 } from 'uuid';
 
 interface IModal {
   coordinate: string;
@@ -12,6 +14,20 @@ interface IModal {
   className?: string;
   onSubmit: (find: IFind) => void;
   editFind?: IFind;
+}
+
+async function uploadFile(file: File) {
+  const fileName = uuidv4();
+  const { data, error } = await supabase.storage
+    .from('finds-images')
+    .upload(fileName, file);
+  if (error) {
+    // Handle error
+  } else {
+    const imageData = supabase.storage
+      .from('finds-images')
+      .getPublicUrl(fileName);
+  }
 }
 
 export const Modal: React.FC<IModal> = ({
@@ -41,24 +57,27 @@ export const Modal: React.FC<IModal> = ({
 
   const handleSubmit = () => {
     onSubmit(find);
-    console.log('++++++');
     onClose();
   };
 
-  const chooseImageSource = (type: ImageSource, event) => {
-    event.stopPropagation();
+  const chooseImageSource = (type: ImageSource) => {
     setImageSource(type);
   };
 
-  const handleUpLoadFile = (event) => {
-    const file = event.target.files[0];
-    console.log(event.target.files);
+  const handleUpLoadFile = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files;
+    if (!file) return;
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreviewUrl(reader.result);
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(file[0]);
+    uploadFile(file[0]);
   };
+
+  // fullPath: finds-images/file"
+  // id: "691d15c1-841e-4b06-8e92-bde5e7379914"
+  // path: "file"
 
   useEffect(() => {
     setFind({ ...find, location });
@@ -89,16 +108,10 @@ export const Modal: React.FC<IModal> = ({
             setFind({ ...find, description: event.target.value })
           }
         />
-        <button
-          type="button"
-          onClick={(event) => chooseImageSource('url', event)}
-        >
+        <button type="button" onClick={() => chooseImageSource('url')}>
           Загрузить через url
         </button>
-        <button
-          type="button"
-          onClick={(event) => chooseImageSource('file', event)}
-        >
+        <button type="button" onClick={() => chooseImageSource('file')}>
           Загрузить через файл
         </button>
         {imageSource === 'url' ? (
