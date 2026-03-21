@@ -1,6 +1,7 @@
 import { data } from 'react-router-dom';
 import { supabase } from '../App';
 import type { IFind } from '../types';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function getFinds(): Promise<IFind[]> {
   const { data, error } = await supabase.from('finds').select();
@@ -29,6 +30,20 @@ export const updateFind = async (index: number, find: IFind) => {
     .eq('id', index)
     .select()
     .eq('id', index);
-  console.log(data);
   return data![0] as IFind;
 };
+
+export async function uploadFile(file: File) {
+  const fileName = uuidv4();
+  const { error } = await supabase.storage
+    .from('finds-images')
+    .upload(fileName, file);
+  if (error) {
+    // Handle error
+  } else {
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from('finds-images').getPublicUrl(fileName);
+    return publicUrl;
+  }
+}

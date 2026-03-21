@@ -4,20 +4,16 @@ import { Modal } from '../../components/Modal/Modal';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, store } from '../../store/store';
 import { FindCard } from '../../components/FindCard/FindCard';
-import { FindList } from '../../components/FindList/FindList';
 import styles from './MainPage.module.css';
 import { setRightColumnType } from '../../store/slices/appSlice';
 import { toLonLat } from 'ol/proj';
 import type { IFind } from '../../types';
-import {
-  addFindThunk,
-  fetchFindsThunk,
-  updateFindThunk,
-} from '../../store/thunk/findsThunk';
+import { addFindThunk, fetchFindsThunk } from '../../store/thunk/findsThunk';
 import { getDistrictThunk } from '../../store/thunk/districtThunk';
 import { List } from '../../components/List/List';
 import { DistrictPreview } from '../../components/DistrictPreview/DistrictPreview';
 import type { Tab } from '../../components/List/List';
+import { uploadFile } from '../../api/findsApi';
 
 export interface IUserPosition {
   lat: number;
@@ -80,8 +76,13 @@ export const MainPage: React.FC = () => {
     setCurrentListTab(tab);
   };
 
-  const onSubmit = async (find: IFind) => {
-    dispatch(addFindThunk(find));
+  const onSubmit = async (find: IFind, image: File) => {
+    if (image) {
+      const imgUrl = await uploadFile(image);
+      dispatch(addFindThunk({ ...find, img: imgUrl! }));
+    } else {
+      dispatch(addFindThunk(find));
+    }
   };
 
   const handleOpenDistrict = (id: number) => {

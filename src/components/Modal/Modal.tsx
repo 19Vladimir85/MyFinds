@@ -4,30 +4,14 @@ import styles from './Modal.module.css';
 import cn from 'clsx';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store/store';
-import { supabase } from '../../App';
-import { uuidv4 } from 'uuid';
 
 interface IModal {
   coordinate: string;
   location: string;
   onClose: () => void;
   className?: string;
-  onSubmit: (find: IFind) => void;
+  onSubmit: (find: IFind, image: File | null | undefined) => void;
   editFind?: IFind;
-}
-
-async function uploadFile(file: File) {
-  const fileName = uuidv4();
-  const { data, error } = await supabase.storage
-    .from('finds-images')
-    .upload(fileName, file);
-  if (error) {
-    // Handle error
-  } else {
-    const imageData = supabase.storage
-      .from('finds-images')
-      .getPublicUrl(fileName);
-  }
 }
 
 export const Modal: React.FC<IModal> = ({
@@ -54,9 +38,10 @@ export const Modal: React.FC<IModal> = ({
   const [previewUrl, setPreviewUrl] = useState<string | null | ArrayBuffer>(
     null,
   );
+  const [file, setFile] = useState<null | undefined | File>();
 
   const handleSubmit = () => {
-    onSubmit(find);
+    onSubmit(find, file);
     onClose();
   };
 
@@ -68,11 +53,11 @@ export const Modal: React.FC<IModal> = ({
     const file = event.target.files;
     if (!file) return;
     const reader = new FileReader();
+    setFile(file[0]);
     reader.onloadend = () => {
       setPreviewUrl(reader.result);
     };
     reader.readAsDataURL(file[0]);
-    uploadFile(file[0]);
   };
 
   // fullPath: finds-images/file"
