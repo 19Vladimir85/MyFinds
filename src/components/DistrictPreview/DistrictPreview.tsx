@@ -24,7 +24,9 @@ export const DistrictPreview: React.FC<IDistrictPreview> = ({
           {el}
         </div>
       ))}
-      <button onClick={() => onClose('district')}>Х</button>
+      <button className={styles.closeBtn} onClick={() => onClose('district')}>
+        Х
+      </button>
     </div>
   );
 };

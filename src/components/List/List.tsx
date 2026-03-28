@@ -24,18 +24,22 @@ export const List: React.FC<IList> = ({
   };
   return (
     <div className={style.wrapper}>
-      <button
-        className={cn(style.tab, { [style.active]: activeTab === 'find' })}
-        onClick={() => onChange('find')}
-      >
-        Находки
-      </button>
-      <button
-        className={cn(style.tab, { [style.active]: activeTab === 'district' })}
-        onClick={() => onChange('district')}
-      >
-        Подборки
-      </button>
+      <div className={style.tabs}>
+        <button
+          className={cn(style.tab, { [style.active]: activeTab === 'find' })}
+          onClick={() => onChange('find')}
+        >
+          Находки
+        </button>
+        <button
+          className={cn(style.tab, {
+            [style.active]: activeTab === 'district',
+          })}
+          onClick={() => onChange('district')}
+        >
+          Подборки
+        </button>
+      </div>
       <div className={style.list}>
         {activeTab === 'find' && <FindList onClick={onClick}></FindList>}
         {activeTab === 'district' && <DistrictList onClick={onDistrictClick} />}

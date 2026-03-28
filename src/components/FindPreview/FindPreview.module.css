@@ -4,4 +4,9 @@
   padding: 12px;
   width: 100%;
   box-sizing: border-box;
+  cursor: pointer;
+}
+
+.image {
+  width: 250px;
 }

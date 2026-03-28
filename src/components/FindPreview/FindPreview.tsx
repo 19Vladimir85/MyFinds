@@ -15,7 +15,7 @@ export const FindPreview: React.FC<IFindPreview> = ({
 }) => {
   return (
     <div onClick={() => onClick(coordinate)} className={styles.findPreview}>
-      <img src={img || 'default'} alt={title} />
+      <img className={styles.image} src={img || 'default'} alt={title} />
       <div>{title}</div>
       <div>{location}</div>
       <div>{description}</div>

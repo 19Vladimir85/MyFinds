@@ -46,8 +46,10 @@ export const FindCard: React.FC<IFindCard> = ({
         />
       ) : (
         <div className={styles.FindPreview}>
-          <button onClick={() => onClose('find')}>Закрыть</button>
-          <img src={img} alt={title} />
+          <button className={styles.closeBtn} onClick={() => onClose('find')}>
+            X
+          </button>
+          <img className={styles.findImg} src={img} alt={title} />
           <div>{title}</div>
           <div>{location}</div>
           <div>{description}</div>

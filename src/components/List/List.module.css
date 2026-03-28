@@ -1,9 +1,15 @@
 .active {
-  color: #f00;
+  color: rgb(8, 94, 8);
 }
 .list {
-  height: 587px;
+  height: calc(100% - 50px);
 }
 .wrapper {
-  height: 650px;
+  height: calc(100% - 16px);
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin: 12px;
 }

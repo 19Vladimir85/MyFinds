@@ -20,15 +20,18 @@ export const Header: React.FC = () => {
       <Link to="/">
         <h1 className={styles.title}>Карта находок</h1>
       </Link>
-      <button onClick={() => dispatch(setOpenModal())}>Настройки</button>
-      {isUser ? (
-        <button onClick={logOut}>Выйти</button>
-      ) : (
-        <Link to="/login">
-          <button>Войти</button>
-        </Link>
-      )}
-      {isUser && <Link to="/personCabinet">Личный кабинет</Link>}
+      <div className={styles.actions}>
+        <button onClick={() => dispatch(setOpenModal())}>Настройки</button>
+        {isUser ? (
+          <button onClick={logOut}>Выйти</button>
+        ) : (
+          <Link to="/login">
+            <button>Войти</button>
+          </Link>
+        )}
+
+        {isUser && <Link to="/personCabinet">Личный кабинет</Link>}
+      </div>
     </div>
   );
 };
